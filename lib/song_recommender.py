@@ -25,15 +25,23 @@ def song_recommender(sp, songs, artists):
         songs_final = pd.read_csv('./data/songs_with_clusters.csv')
         hot = list(songs_final[songs_final["song_label"] == "H"]["id"])
         not_hot = list(songs_final[songs_final["song_label"] == "R"]["id"])
-        if ids in hot:
+        if ids[0] in hot:
             x = songs_final[(songs_final["clusters_kmeans"] == cluster[0]) & (songs_final["song_label"] == "H")]
             x = x[x["id"] != ids[0]]
             recommended_song = x.sample(n=1)
-            return print("Recommended song for user: ", list(recommended_song[["song", "artist"]].iloc[0])[0],"/ Song artist: ", list(recommended_song[["song", "artist"]].iloc[0])[1])
+            return print("Recommended song for user: " + 
+                         list(recommended_song[["song", "artist", "id"]].iloc[0])[0] +
+                         '\n' + "Artist: ", list(recommended_song[["song", "artist", "id"]].iloc[0])[1] +
+                         '\n' + "Acces this song via: https://open.spotify.com/track/" + list(recommended_song[["song", "artist", "id"]].iloc[0])[2]) 
+        
+                      
         else:
-            y = songs_final[(songs_final["clusters_kmeans"] == cluster[0]) & (songs_final["song_label"] == "H")]
+            y = songs_final[(songs_final["clusters_kmeans"] == cluster[0]) & (songs_final["song_label"] == "R")]
             y = y[y["id"] != ids[0]]
             recommended_song2 = y.sample(n=1, replace = False)
-            return print("Recommended song for user: ", list(recommended_song2[["song", "artist"]].iloc[0])[0],"/ Song artist: ", list(recommended_song2[["song", "artist"]].iloc[0])[1])
+            return print("Recommended song for user: " + 
+                         list(recommended_song2[["song", "artist"]].iloc[0])[0] +
+                         '\n' + "Artist: ", list(recommended_song2[["song", "artist"]].iloc[0])[1] +
+                         '\n' + "Acces this song via: https://open.spotify.com/track/" + list(recommended_song2[["song", "artist", "id"]].iloc[0])[2]) 
     except:
         return "Song or artist not found"
